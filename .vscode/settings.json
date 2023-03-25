@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "apue.h": "c",
+        "dirent.h": "c",
+        "errno.h": "c",
+        "stdio.h": "c",
+        "fcntl.h": "c",
+        "limits": "c"
+    }
+}
