@@ -11,7 +11,10 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-L",
+                "${workspaceFolder}/lib",
+                "-lapue"
             ],
             "options": {
                 "cwd": "${fileDirname}"
