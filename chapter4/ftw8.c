@@ -22,20 +22,20 @@ int main(int argc, char* argv[])
     {
         ntot = 1;
     }
-    printf("regular files  = %7ld, %5.2f %%\n", nreg, nreg * 100.8 / ntot);
-    printf("directories    = %7ld, %5.2f %%\n", ndir, ndir * 100.8 / ntot);
-    printf("block special  = %7ld, %5.2f %%\n", nblk, nblk * 100.8 / ntot);
-    printf("char special   = %7ld, %5.2f %%\n", nchr, nchr * 100.8 / ntot);
-    printf("FIFOs          = %7ld, %5.2f %%\n", nfifo, nfifo * 100.8 / ntot);
-    printf("symbolic links = %7ld, %5.2f %%\n", nslink, nslink * 100.8 / ntot);
-    printf("sockets        = %7ld, %5.2f %%\n", nsock, nsock * 100.8 / ntot);
+    printf("regular files  = %7ld, %5.2f %%\n", nreg, nreg * 100.0 / ntot);
+    printf("directories    = %7ld, %5.2f %%\n", ndir, ndir * 100.0 / ntot);
+    printf("block special  = %7ld, %5.2f %%\n", nblk, nblk * 100.0 / ntot);
+    printf("char special   = %7ld, %5.2f %%\n", nchr, nchr * 100.0 / ntot);
+    printf("FIFOs          = %7ld, %5.2f %%\n", nfifo, nfifo * 100.0 / ntot);
+    printf("symbolic links = %7ld, %5.2f %%\n", nslink, nslink * 100.0 / ntot);
+    printf("sockets        = %7ld, %5.2f %%\n", nsock, nsock * 100.0 / ntot);
     exit(ret);
 }
 
-#define FTW_F 1
-#define FTW_D 2
-#define FTW_DNR 3
-#define FTW_NS 4
+#define FTW_F 1     // 普通文件
+#define FTW_D 2     // 目录
+#define FTW_DNR 3   // 无法读取目录
+#define FTW_NS 4    // stat函数失败
 
 static char *fullpath;
 static size_t pathlen;
@@ -69,8 +69,9 @@ static int dopath(Myfunc *func)
     {
         return (func(fullpath, &statbuf, FTW_F));
     }
-    // 如果是目录，先处理当前目录对目录中的每一项继续处理，再对目录中的每一项继续处理
-    if ((ret = func(fullpath, &statbuf, FTW_D)) != 0)
+
+    /************ 如果是目录，先处理当前目录，再对目录中的每一项继续递归处理 ************/ 
+    if ((ret = func(fullpath, &statbuf, FTW_D)) != 0)   // 处理当前目录
     {
         return (ret);
     }
@@ -85,11 +86,11 @@ static int dopath(Myfunc *func)
     }
     fullpath[n++] = '/';
     fullpath[n] = 0;
-    if ((dp = opendir(fullpath)) == NULL)
+    if ((dp = opendir(fullpath)) == NULL)   // 打开当前目录
     {
         return (func(fullpath, &statbuf, FTW_DNR));
     }
-    while ((dirp = readdir(dp)) != NULL)
+    while ((dirp = readdir(dp)) != NULL)    // 对目录中的每一项开始递归处理
     {
         if (strcmp(dirp->d_name, ".") == 0 || strcmp(dirp->d_name, "..") == 0)
         {
