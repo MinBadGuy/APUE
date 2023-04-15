@@ -5,6 +5,8 @@
         "errno.h": "c",
         "stdio.h": "c",
         "fcntl.h": "c",
-        "limits": "c"
+        "limits": "c",
+        "string.h": "c",
+        "pwd.h": "c"
     }
 }
