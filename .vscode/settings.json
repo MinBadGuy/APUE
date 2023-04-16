@@ -7,6 +7,7 @@
         "fcntl.h": "c",
         "limits": "c",
         "string.h": "c",
-        "pwd.h": "c"
+        "pwd.h": "c",
+        "time.h": "c"
     }
 }
