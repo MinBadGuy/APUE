@@ -8,6 +8,11 @@
         "limits": "c",
         "string.h": "c",
         "pwd.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "error.h": "c",
+        "*.tcc": "c",
+        "cstdlib": "c",
+        "system_error": "c",
+        "typeinfo": "c"
     }
 }
