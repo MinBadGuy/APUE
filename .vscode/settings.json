@@ -13,6 +13,11 @@
         "*.tcc": "c",
         "cstdlib": "c",
         "system_error": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "signal.h": "c",
+        "setjmp.h": "c",
+        "unistd.h": "c",
+        "sigaction.h": "c",
+        "sigset_t.h": "c"
     }
 }
