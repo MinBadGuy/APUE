@@ -40,6 +40,9 @@ void serve(int sockfd)
                 syslog(LOG_ERR, "ruptimed: unexpected error");
                 exit(1);
             }
+            printf("clfd: %d\n", clfd);
+            printf("STDOUT_FILENO: %d\n", STDOUT_FILENO);
+            printf("STDERR_FILENO: %d\n", STDERR_FILENO);
             close(clfd);
             execl("/usr/bin/uptime", "uptime", (char *)0);
             syslog(LOG_ERR, "ruptimed: unexpected return from exec: %s", strerror(errno));
@@ -67,7 +70,7 @@ int main(int argc, char *argv[])
         err_sys("malloc error");
     if (gethostname(host, n) < 0)
         err_sys("gethostname error");
-    daemonize("ruptimed");
+    // daemonize("ruptimed");
     memset(&hint, 0, sizeof(hint));
     hint.ai_flags = AI_CANONNAME;
     hint.ai_socktype = SOCK_STREAM;
@@ -83,6 +86,7 @@ int main(int argc, char *argv[])
     {
         if ((sockfd = initserver(SOCK_STREAM, aip->ai_addr, aip->ai_addrlen, QLEN)) >= 0)
         {
+            printf("sockfd: %d\n", sockfd);
             serve(sockfd);
             exit(0);
         }

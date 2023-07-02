@@ -2,6 +2,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 
 #define BUFLEN  128
 #define TIMEOUT 20
@@ -13,6 +14,14 @@ void sigalrm(int signo)
 
 void print_uptime(int sockfd, struct addrinfo *aip)
 {
+    char abuf[INET_ADDRSTRLEN];
+    struct sockaddr_in  *sinp;
+    sinp = (struct sockaddr_in *)aip->ai_addr;
+    const char * paddr = inet_ntop(AF_INET, &sinp->sin_addr, abuf, INET_ADDRSTRLEN);
+    printf("address: %s\n", paddr);
+    printf("net port: %d\n", sinp->sin_port);           // 网络字节序   16796
+    printf("host port: %d\n", ntohs(sinp->sin_port));   // 主机字节序   40001
+    
     int     n;
     char    buf[BUFLEN];
 
@@ -38,7 +47,7 @@ int main(int argc, char *argv[])
     struct sigaction    sa;
 
     if (argc != 2)
-        err_quit("usage: ruptime hostname");
+        err_quit("usage: ruptime-dg hostname");
     sa.sa_handler = sigalrm;
     sa.sa_flags = 0;
     sigemptyset(&sa.sa_mask);
@@ -49,7 +58,7 @@ int main(int argc, char *argv[])
     hint.ai_canonname = NULL;
     hint.ai_addr = NULL;
     hint.ai_next = NULL;
-    if ((err = getaddrinfo(argv[1], "ruptime", &hint, &ailist)) != 0)
+    if ((err = getaddrinfo(argv[1], "ruptime-dg", &hint, &ailist)) != 0)
         err_quit("getaddrinfo error: %s", gai_strerror(err));
     
     for (aip = ailist; aip != NULL; aip = aip->ai_next)

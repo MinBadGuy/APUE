@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <syslog.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 
 #define BUFLEN  128
 #define QLEN    10
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
         err_sys("malloc error");
     if (gethostname(host, n) < 0)
         err_sys("gethostname error");
-    daemonize("ruptimed");
+    // daemonize("ruptimed");
     memset(&hint, 0, sizeof(hint));
     hint.ai_flags = AI_CANONNAME;
     hint.ai_socktype = SOCK_STREAM;
@@ -74,9 +75,15 @@ int main(int argc, char *argv[])
     {
         if ((sockfd = initserver(SOCK_STREAM, aip->ai_addr, aip->ai_addrlen, QLEN)) >= 0)
         {
+            printf("sockfd: %d\n", sockfd);
             serve(sockfd);
             exit(0);
         }
+        printf("sockfd = %d\n", sockfd);   
     }
     exit(1);
 }
+
+/**
+ * 为了调试本程序，需要在/etc/services最后一行配置ruptime服务，为其指定端口号和协议类型
+*/

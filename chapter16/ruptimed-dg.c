@@ -28,7 +28,7 @@ void serve(int sockfd)
         alen = MAXADDRLEN;
         if ((n = recvfrom(sockfd, buf, BUFLEN, 0, addr, &alen)) < 0)
         {
-            syslog(LOG_ERR, "ruptimed: recvfrom error: %s", strerror(errno));
+            syslog(LOG_ERR, "ruptimed-dg: recvfrom error: %s", strerror(errno));
             exit(1);
         }
         if ((fp = popen("/usr/bin/uptime", "r")) == NULL)
@@ -53,23 +53,23 @@ int main(int argc, char *argv[])
     char            *host;
 
     if (argc != 1)
-        err_quit("usage: ruptimed");
+        err_quit("usage: ruptimed-dg");
     if ((n = sysconf(_SC_HOST_NAME_MAX)) < 0)
         n = HOST_NAME_MAX;  /* best guess */
     if ((host = malloc(n)) == NULL)
         err_sys("malloc error");
     if (gethostname(host, n) < 0)
         err_sys("gethostname error");
-    daemonize("ruptimed");
+    // daemonize("ruptimed-dg");
     memset(&hint, 0, sizeof(hint));
     hint.ai_flags = AI_CANONNAME;
     hint.ai_socktype = SOCK_DGRAM;
     hint.ai_canonname = NULL;
     hint.ai_addr = NULL;
     hint.ai_next = NULL;
-    if ((err = getaddrinfo(host, "ruptime", &hint, &ailist)) != 0)
+    if ((err = getaddrinfo(host, "ruptime-dg", &hint, &ailist)) != 0)
     {
-        syslog(LOG_ERR, "ruptimed: getaddrinfo error： %s", gai_strerror(err));
+        syslog(LOG_ERR, "ruptimed-dg: getaddrinfo error: %s", gai_strerror(err));
         exit(1);
     }
     for (aip = ailist; aip != NULL; aip = aip->ai_next)

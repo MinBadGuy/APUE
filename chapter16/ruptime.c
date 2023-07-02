@@ -5,6 +5,10 @@
 
 #define BUFLEN  128
 
+#ifndef HOST_NAME_MAX
+#define HOST_NAME_MAX   256
+#endif
+
 extern int connect_retry(int, int, int, const struct sockaddr *, socklen_t);
 
 void print_uptime(int sockfd)
@@ -27,6 +31,7 @@ int main(int argc, char * argv[])
     if (argc != 2)
         err_quit("usage: ruptime hostname");
     memset(&hint, 0, sizeof(hint));
+    hint.ai_flags = AI_CANONNAME;
     hint.ai_socktype = SOCK_STREAM;
     hint.ai_canonname = NULL;
     hint.ai_addr = NULL;
@@ -44,6 +49,7 @@ int main(int argc, char * argv[])
             print_uptime(sockfd);
             exit(0);
         }
+        printf("sockfd = %d\n", sockfd);
     }
     err_exit(err, "can't connect to %s", argv[1]);
 }
