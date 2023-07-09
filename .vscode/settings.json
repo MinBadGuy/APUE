@@ -19,6 +19,7 @@
         "unistd.h": "c",
         "sigaction.h": "c",
         "sigset_t.h": "c",
-        "inet.h": "c"
+        "inet.h": "c",
+        "socket.h": "c"
     }
 }
